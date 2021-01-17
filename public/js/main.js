@@ -9,8 +9,10 @@ socket.on('message', message => {
 // Message sent
 chatForm.addEventListener('submit', (e) => {
     e.preventDefault();
-
+    
+    // Get message text
     const msg = e.target.elements.msg.value;
 
-    console.log(msg);
+    // Emit message to the server
+    socket.emit('chatMessage', msg);
 });
