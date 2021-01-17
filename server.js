@@ -13,6 +13,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 io.on('connection', socket => {
     console.log('New connection connected...');
+
+    socket.emit('message', 'Welcome to ChatRooms');
 });
 
 const PORT = process.env.PORT || 3000;
