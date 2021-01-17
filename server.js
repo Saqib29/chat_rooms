@@ -16,7 +16,13 @@ io.on('connection', socket => {
 
     socket.emit('message', 'Welcome to ChatRooms');
 
+    // Broadcast when a user connects
     socket.broadcast.emit('message', 'A new user has joined to the Chat');
+
+    // Runs when client disconnects
+    socket.on('disconnect', () => {
+        io.emit('message', 'A user has left the Chat');
+    });
 });
 
 const PORT = process.env.PORT || 3000;
