@@ -13,6 +13,7 @@ chatForm.addEventListener('submit', (e) => {
     
     // Get message text
     const msg = e.target.elements.msg.value;
+    document.getElementById("msg").value = '';
 
     // Emit message to the server
     socket.emit('chatMessage', msg);
