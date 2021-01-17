@@ -97,7 +97,7 @@ a {
 .chat-messages .message {
 	padding: 10px;
 	margin-bottom: 15px;
-    background-color: rgb(136, 136, 136);
+    background-color: rgba(70, 66, 66, 0.397);
     /* var(--light-color); */
 	border-radius: 5px;
 }
