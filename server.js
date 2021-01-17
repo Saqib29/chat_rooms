@@ -15,6 +15,8 @@ io.on('connection', socket => {
     console.log('New connection connected...');
 
     socket.emit('message', 'Welcome to ChatRooms');
+
+    socket.broadcast.emit('message', 'A new user has joined to the Chat');
 });
 
 const PORT = process.env.PORT || 3000;
