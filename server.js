@@ -11,6 +11,10 @@ const io = socketio(server);
 // Set Static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
+io.on('connection', socket => {
+    console.log('New connection connected...');
+});
+
 const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => {
