@@ -14,6 +14,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 io.on('connection', socket => {
     console.log('New connection connected...');
 
+    // give only one user who connects her/hisself
     socket.emit('message', 'Welcome to ChatRooms');
 
     // Broadcast when a user connects
