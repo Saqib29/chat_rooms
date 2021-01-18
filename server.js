@@ -28,6 +28,12 @@ io.on('connection', socket => {
         // Broadcast when a user connects
         socket.broadcast.to(user.room).emit('message', formatMessage(chatBot, `${user.username} has joined to the Chat`));
 
+        // Send users and room info
+        io.to(user.room).emit('roomUsers', {
+            room: user.room,
+            users: getRoomUser(user.room)
+        });
+
     });
 
 
@@ -44,6 +50,12 @@ io.on('connection', socket => {
         if(user) {
             io.to(user.room).emit('message', formatMessage(chatBot, `${user.username} has left the Chat`));
         }
+
+        // Send users and room info
+        io.to(user.room).emit('roomUsers', {
+            room: user.room,
+            users: getRoomUser(user.room)
+        });
     });
     
 });
