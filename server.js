@@ -3,6 +3,7 @@ const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
 const formatMessage = require('./util/message');
+const { userJoin, getCurrentUser, userLeave, getRoomUser } = require('./util/users');
 
 const app = express();
 const server = http.createServer(app);
@@ -13,24 +14,38 @@ const chatBot = "ChatRoom";
 // Set Static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Run when user connects
 io.on('connection', socket => {
-    console.log('New connection connected...');
+    // console.log('New connection connected...');
+    socket.on('joinRoom', ({ username, room }) => {
+        const user = userJoin(socket.id, username, room);
 
-    // give only one user who connects her/hisself
-    socket.emit('message', formatMessage(chatBot, 'Welcome to ChatRooms'));
+        socket.join(user.room);
 
-    // Broadcast when a user connects
-    socket.broadcast.emit('message', formatMessage(chatBot, 'A new user has joined to the Chat'));
+        // give only one user who connects her/hisself
+        socket.emit('message', formatMessage(chatBot, 'Welcome to ChatRooms'));
 
-    // Runs when client disconnects
-    socket.on('disconnect', () => {
-        io.emit('message', formatMessage(chatBot,'A user has left the Chat'));
+        // Broadcast when a user connects
+        socket.broadcast.to(user.room).emit('message', formatMessage(chatBot, `${user.username} has joined to the Chat`));
+
     });
+
 
     // Listen the message chatmessage from frontend side
     socket.on('chatMessage', msg => {
-        io.emit('message', formatMessage('USER', msg));
+        const user = getCurrentUser(socket.id);
+
+        io.to(user.room).emit('message', formatMessage(user.username, msg));
     });
+
+    // Runs when client disconnects
+    socket.on('disconnect', () => {
+        const user = userLeave(socket.id);
+        if(user) {
+            io.to(user.room).emit('message', formatMessage(chatBot, `${user.username} has left the Chat`));
+        }
+    });
+    
 });
 
 const PORT = process.env.PORT || 3000;
